@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 //importa a função do app.jsx
-import App from "./app";
+import App from "./app.jsx";
 
 /*ReactDOM.createRoot -> criar a raiz do react
 document.getElementById('root') -> procura o documento com id = 'root'

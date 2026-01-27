@@ -1,44 +1,41 @@
-//importa metetodo para usar no react
-import { useState } from 'react';
-import { Helmet } from 'react-helmet';
-//importação de arquivo
-import './style/app.css';
+//arquivo que vai gerencia todas rotas(paginas)
+
+/*nessario para fazer manipulação das paginas 
+    com se fosse no fastapi*/
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 //renomeando para favicon
 import favicon from'./assets/favicon.png';
 
+//importação de arquivo
+import './style/app.css';
+
+import { Helmet } from 'react-helmet';
+
+//rotas
+import Home from './page/home.jsx';
+import Login from './page/login.jsx';
+import Criar_conta from './page/criar_conta.jsx';
+
 function App() {
-  
-  //aqui eu posso mudar o valor e o react já o rediriza
-  const [a, SetA] = useState(0);
-
-  function button_logic(){
-    SetA(a+1);
-  };
-
-  function zera_button(){
-    SetA(0);
-  };
-
   return (
-    //codigo html body
-    //className para o css
-    <div className='conternair_cenrte'>
-      {/*código head*/}
-      <Helmet>
-        <link rel="icon" href={favicon} />
-      </Helmet>
-      {/*códidog body*/}
+    //gerenciador de rotas
+    <BrowserRouter>
+        {/*logo do site*/}
+        <Helmet>
+            <link rel="shortcut icon" href={favicon}/>
+        </Helmet>
+        {/* criardor das rota */}
+        <Routes>
+            {/* rota que nem no fastapi */}
+            <Route path='/' element={<Home />} />
 
-      <h1>Hello World</h1>
-      <br />
-      <button onClick={button_logic}>
-        test cliques { a } 
-      </button>
+            <Route path='/login' element={<Login />} />
 
-      <button onClick={zera_button}>
-        zeera o campo butoon
-      </button>
-    </div>
+            <Route path='criar_conta' element={<Criar_conta />} />
+            
+        </Routes>
+    </BrowserRouter>
   );
 }
 

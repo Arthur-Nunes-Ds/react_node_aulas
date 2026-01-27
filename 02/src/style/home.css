@@ -1,0 +1,23 @@
+.name_page{
+    color: rgb(152, 243, 172);
+}
+
+.lick_button{
+    /*remove sublinhado*/
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    /*espasamento interno do elemeto*/
+    padding: 10px 20px;
+    /*add uma borda*/
+    border: 2px solid rgba(233, 233, 233, 0.575);
+    /*deixa ela cricurla*/
+    border-radius: 5px;
+    /*suavisa a trazação de cor*/
+    transition: all 0.3 ease;
+}
+
+/*quando o mouse passar por cima*/
+.lick_button:hover{
+    background-color: rgba(255, 255, 255, 0.712);
+    color: rgba(0, 0, 0, 0.801);
+}
