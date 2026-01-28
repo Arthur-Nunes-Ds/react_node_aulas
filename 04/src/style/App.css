@@ -1,0 +1,31 @@
+/*corpo do htmll*/
+body {
+    /*bg da tela*/   
+    background-color: #121212;
+    /*color text*/
+    color: white;
+}
+
+/*classe propia*/
+.conternair_cenrte{
+    /*sem o display os outro abaixo não fuciona*/
+    display: flex;
+    /*como os elementos serão organizados*/
+    flex-direction: column;
+    /*como eles serão organizado verticalmente*/
+    justify-content: center;
+    /*faz que os intem não fique esticados*/
+    align-items: center;
+    /*espço padrão de cada elemento*/
+    gap: 10px;
+}
+
+.centro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90svh;
+  width: 100%;
+}
+

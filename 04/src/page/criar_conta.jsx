@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'; 
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
+import { jwtDecode } from "jwt-decode";
 
 //incones do react -> https://react-icons.github.io/
 import { FaRegEyeSlash } from "react-icons/fa";
@@ -18,15 +19,59 @@ function Login() {
   const [fedeback_vaule, setVauleFedeback] = useState("");
   const [fedeback_cor, setCorFedeback] = useState("");
 
-  function login_dados() {
+  async function login_dados() {
     if(email !== "" | senha !== ""){
-      if(email === "admin" && senha === "123"){
-        setCorFedeback("#00ff00");
-        setVauleFedeback("login liberado");
-      }
-      else{
-        setCorFedeback("#ff0000");
-        setVauleFedeback("senha/email incorreto");
+      setCorFedeback("#00ff00");
+      setVauleFedeback("login liberado");
+
+      try{
+        const quey = await fetch('https://2dsmoca.tech/public/criar_cliente',{
+          //fala como os dados sera enviado mas toke caso tenha
+          headers: {/*hade da api*/},
+          //method que eu tó requesitando
+          method: 'POST',
+          //o que eu tó enviando de fato por server
+          body: {
+            "nome": nome,
+            "senha": senha,
+            "email": email
+          }});
+        //FIXME - fix status code
+        switch (quey.status) {
+          case 200:
+            setCorFedeback("#00ff00");
+
+            setVauleFedeback("Login feito com sucesso.");
+            const resultado = await quey.json();
+
+            const token = resultado.access_token;
+            const decoded = jwtDecode(token);
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("role", decoded.role);
+
+            console.log(decoded.role);
+            break;
+          
+          case 404:
+              setCorFedeback("#ff0000");
+              setVauleFedeback("Email não cadastrado/encontrado.");
+            break;
+          
+          case 401:
+            setCorFedeback("#ff0000");
+            setVauleFedeback("Credenciais invalida.");
+            break;
+
+          default:
+            setCorFedeback("#eeff00");
+            setVauleFedeback(`Erro interno tente mas tarde.`);
+        }
+
+      } catch (error) {
+        //erro de rede
+        setCorFedeback("#eeff00");
+        setVauleFedeback(`Erro de conexão: ${error.message}`);
       }
     }
     else{
