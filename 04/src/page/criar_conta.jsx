@@ -1,10 +1,8 @@
 //importa metetodo para usar no react
-import { Link } from 'react-router-dom'; 
+import { Link, useNavigate } from 'react-router-dom'; 
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { jwtDecode } from "jwt-decode";
 
-//incones do react -> https://react-icons.github.io/
 import { FaRegEyeSlash } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5";
 
@@ -12,90 +10,42 @@ import '../style/app.css';
 import '../style/home.css';
 import '../style/login.css';
 
-function Login() {
+import api from '../api/public.jsx';
+
+function Criar_conta() {
   const [senha, setSenha] = useState("");
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [showsenha, setShowsenha] = useState(false);
+  const [user_exite, setUserExite] = useState(false);
   const [fedeback_vaule, setVauleFedeback] = useState("");
   const [fedeback_cor, setCorFedeback] = useState("");
-
-  async function login_dados() {
-    if(email !== "" | senha !== ""){
-      setCorFedeback("#00ff00");
-      setVauleFedeback("login liberado");
-
-      try{
-        const quey = await fetch('https://2dsmoca.tech/public/criar_cliente',{
-          //fala como os dados sera enviado mas toke caso tenha
-          headers: {/*hade da api*/},
-          //method que eu tó requesitando
-          method: 'POST',
-          //o que eu tó enviando de fato por server
-          body: {
-            "nome": nome,
-            "senha": senha,
-            "email": email
-          }});
-        //FIXME - fix status code
-        switch (quey.status) {
-          case 200:
-            setCorFedeback("#00ff00");
-
-            setVauleFedeback("Login feito com sucesso.");
-            const resultado = await quey.json();
-
-            const token = resultado.access_token;
-            const decoded = jwtDecode(token);
-
-            localStorage.setItem("token", token);
-            localStorage.setItem("role", decoded.role);
-
-            console.log(decoded.role);
-            break;
-          
-          case 404:
-              setCorFedeback("#ff0000");
-              setVauleFedeback("Email não cadastrado/encontrado.");
-            break;
-          
-          case 401:
-            setCorFedeback("#ff0000");
-            setVauleFedeback("Credenciais invalida.");
-            break;
-
-          default:
-            setCorFedeback("#eeff00");
-            setVauleFedeback(`Erro interno tente mas tarde.`);
-        }
-
-      } catch (error) {
-        //erro de rede
-        setCorFedeback("#eeff00");
-        setVauleFedeback(`Erro de conexão: ${error.message}`);
-      }
-    }
-    else{
-      setCorFedeback("#ff0000");
-      setVauleFedeback("informe o campo de email e senha");
-    }
-  }
+  const mudar_para = useNavigate();
 
   return(
     <div className='conternair_cenrte'>
       <Helmet>
-        <title>Login</title>
+        <title>Criar Conta</title>
       </Helmet>
 
-      <h1 className='name_page'>Logar</h1>
+      <h1 className='name_page'>Criar Conta</h1>
       <label> Email
         <input
-          type='text'
+          type='email'
           value={email}
           placeholder='test@email.com'
           onChange={(e) => setEmail(e.target.value)}
           style={{width: "190px"}}
-          name="email"
         /> 
+      </label>
+
+      <label>Nome
+        <input type="text"
+          value={nome}
+          placeholder='nome'
+          onChange={(e) => setNome(e.target.value)}
+          style={{width: "190px"}}
+        />
       </label>
 
       <label> Senha
@@ -115,22 +65,26 @@ function Login() {
                 => é como se fosse uma lambada em python*/
             onChange={(e) => setSenha(e.target.value)}
           />
-            <button onClick={(e) => setShowsenha(!showsenha)} 
+          <button onClick={(e) => setShowsenha(!showsenha)} 
           className='showsenha'>
           {showsenha ? <FaRegEyeSlash/> : <IoEyeOutline/>}
             </button>
         </div>
       </label>
 
+      {user_exite ? <Link to='/login' className='lick_button' >Ir para Login</Link> : null}
+
       {/* style= {} e´um "css" */}
       <p style={{ color: fedeback_cor}} className="fedeback">{fedeback_vaule}</p>
       <div className='button_menu'>
         <Link to='/' className='lick_button'>Voltar</Link>
-        <buntton onClick={login_dados} className="logarbnt">Logar</buntton>
+        <buntton onClick={() => api.criar_user(
+          setCorFedeback, setVauleFedeback, email, senha, nome , mudar_para, setUserExite
+        )} className="logarbnt">Criar Conta</buntton>
       </div>
     </div>
   );
 }
 
 //fala o que vai pode ser importado para os outros códigos
-export default Login;
+export default Criar_conta;
